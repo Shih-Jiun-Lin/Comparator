@@ -1,0 +1,50 @@
+library ieee;
+use ieee.std_logic_1164.all;
+
+entity carry_lookahead_adder is
+	Port( 
+		x: in std_logic_vector(3 downto 0);
+      y: in std_logic_vector(3 downto 0);
+      sel: in std_logic;
+      s: out std_logic_vector(3 downto 0);
+      co: out std_logic;
+		overflow: out std_logic;
+		sign: out std_logic
+	);
+end carry_lookahead_adder;
+
+architecture structural of carry_lookahead_adder is
+
+signal sum_temp, sum, y_final: std_logic_vector(3 downto 0) := "0000";
+signal c : std_logic_vector(4 downto 0) := "00000"; --c4 for last carry(cout)
+signal p : std_logic_vector(3 downto 0) := "0000"; 
+signal g : std_logic_vector(3 downto 0) := "0000"; 
+
+begin
+	 
+	y_to_2s: process(y)
+		begin
+			if(sel='1') then
+				y_fianl <= not(y)+1;
+			else
+				y_final <= y;
+		end 	
+	
+	sum_temp <= x xor y_final; 
+   g <= x and y; 
+   p <= x or y; 
+   c(0) <= ci;
+	 
+   cla: process(c, p, g)
+		begin
+			clc: for i in 0 to 3 loop --carry lookahead circuits
+				c(i+1) <= g(i) or (p(i) and c(i)); 
+		end loop;
+	end process;
+	 
+   co <= c(4); 
+   sum <= sum_temp xor c(3 downto 0);
+	s <= sum;
+	overflow <= c(4) xor c(3);
+	sign <= sum(3);
+end structural;

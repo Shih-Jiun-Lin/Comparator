@@ -1,0 +1,19 @@
+library ieee;
+use ieee.std_logic_1164.all;
+
+entity comparator is
+	port(
+		
+		input_x: in std_logic_vector(3 downto 0);
+		
+		input_y: in std_logic_vector(3 downto 0);
+		
+		u_above: out std_logic;
+		u_below:	out std_logic;
+		u_equal: out std_logic;
+		
+		s_above: out std_logic;
+		s_below: out std_logic;
+		s_equal:	out std_logic;
+	
+	);
